@@ -3,10 +3,12 @@
 
 # COMMAND ----------
 
-# !cp ../requirements.txt ~/.
-# %pip install -r ~/requirements.txt
-%pip install pytest==7.1.2
-%restart_python
+# MAGIC %sh
+# MAGIC # Instalando dependências
+# MAGIC %pip install -r ./../requirements.txt
+# MAGIC
+# MAGIC # Reiniciando o kernel
+# MAGIC %restart_python
 
 # COMMAND ----------
 
@@ -18,11 +20,11 @@
 # MAGIC # Vai para a raiz do repo
 # MAGIC cd "$REPO_ROOT" || exit 1
 # MAGIC
-# MAGIC # Evita escrita de arquivos .pyc (Workspace é read-only)
-# MAGIC export PYTHONDONTWRITEBYTECODE=1
-# MAGIC
 # MAGIC # Garante que o Python encontre os módulos do repo
 # MAGIC export PYTHONPATH="$REPO_ROOT"
+# MAGIC
+# MAGIC # Evita escrita de arquivos .pyc (Workspace é read-only)
+# MAGIC export PYTHONDONTWRITEBYTECODE=1
 # MAGIC
 # MAGIC # Roda todos os testes
 # MAGIC pytest tests \
