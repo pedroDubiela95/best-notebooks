@@ -3,12 +3,11 @@
 
 # COMMAND ----------
 
-# MAGIC %sh
-# MAGIC # Instalando dependências
-# MAGIC %pip install -r ./../requirements.txt
-# MAGIC
-# MAGIC # Reiniciando o kernel
-# MAGIC %restart_python
+# Instalando dependências
+%pip install -r ./../requirements.txt
+
+# Reiniciando o kernel
+%restart_python
 
 # COMMAND ----------
 
