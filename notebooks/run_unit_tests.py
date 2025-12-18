@@ -3,6 +3,12 @@
 
 # COMMAND ----------
 
+# Instalando dependências
+# %pip install -r ./../requirements.txt
+# %restart_python
+
+# COMMAND ----------
+
 # MAGIC %sh
 # MAGIC # Define a raiz do repositório (subindo de notebooks → repo root)
 # MAGIC REPO_ROOT="$(cd .. && pwd)"
