@@ -5,8 +5,10 @@
 
 # COMMAND ----------
 
-# MAGIC %load_ext autoreload
-# MAGIC %autoreload 2
+# MAGIC %sh
+# MAGIC # Garante que o Python encontre os módulos do repo
+# MAGIC REPO_ROOT="$(cd .. && pwd)"
+# MAGIC export PYTHONPATH="$REPO_ROOT"
 
 # COMMAND ----------
 
