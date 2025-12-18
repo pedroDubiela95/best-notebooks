@@ -10,30 +10,28 @@
 
 # COMMAND ----------
 
-# pytest.main runs our tests directly in the notebook environment, providing
-# fidelity for Spark and other configuration variables.
-#
-# A limitation of this approach is that changes to the test will be
-# cache by Python's import caching mechanism.
-#
-# To iterate on tests during development, we restart the Python process 
-# and thus clear the import cache to pick up changes.
-dbutils.library.restartPython()
-
-import pytest
-import os
-import sys
-
-# Run all tests in the repository root.
-notebook_path = dbutils.notebook.entry_point.getDbutils().notebook().getContext().notebookPath().get()
-repo_root = os.path.dirname(os.path.dirname(notebook_path))
-os.chdir(f'/Workspace/{repo_root}')
-%pwd
-
-# Skip writing pyc files on a readonly filesystem.
-sys.dont_write_bytecode = True
-
-retcode = pytest.main([".", "-p", "no:cacheprovider"])
-
-# Fail the cell execution if we have any test failures.
-assert retcode == 0, 'The pytest invocation failed. See the log above for details.'
+# MAGIC %sh
+# MAGIC # Define a raiz do repositório (subindo de notebooks → repo root)
+# MAGIC REPO_ROOT="$(cd .. && pwd)"
+# MAGIC echo "Repo root: $REPO_ROOT"
+# MAGIC
+# MAGIC # Vai para a raiz do repo
+# MAGIC cd "$REPO_ROOT" || exit 1
+# MAGIC
+# MAGIC # Evita escrita de arquivos .pyc (Workspace é read-only)
+# MAGIC export PYTHONDONTWRITEBYTECODE=1
+# MAGIC
+# MAGIC # Garante que o Python encontre os módulos do repo
+# MAGIC export PYTHONPATH="$REPO_ROOT"
+# MAGIC
+# MAGIC # Roda todos os testes
+# MAGIC pytest tests \
+# MAGIC   --assert=plain \
+# MAGIC   -p no:cacheprovider
+# MAGIC
+# MAGIC # Falha a célula / job se pytest falhar
+# MAGIC if [ $? -ne 0 ]; then
+# MAGIC   echo "Pytest invocation failed. See the log above for details."
+# MAGIC   exit 1
+# MAGIC fi
+# MAGIC
