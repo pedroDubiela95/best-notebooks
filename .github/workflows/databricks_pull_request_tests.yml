@@ -15,28 +15,16 @@ jobs:
       - name: Checkout repo
         uses: actions/checkout@v2
 
-      - name: Run test notebook
+      - name: Run test notebook (Serverless)
         uses: databricks/run-notebook@main
         with:
           databricks-token: ${{ secrets.DATABRICKS_TOKEN }}
 
           local-notebook-path: notebooks/run_unit_tests.py
 
-          # 👇 Job cluster efêmero (SEM cluster ID)
-          new-cluster-json: >
-            {
-              "spark_version": "14.3.x-scala2.12",
-              "num_workers": 1
-            }
+          # ✅ Serverless compute (obrigatório no seu workspace)
+          serverless: true
 
           git-commit: ${{ github.event.pull_request.head.sha }}
-
-          access-control-list-json: >
-            [
-              {
-                "group_name": "users",
-                "permission_level": "CAN_VIEW"
-              }
-            ]
 
           run-name: 'EDA transforms helper module unit tests'
