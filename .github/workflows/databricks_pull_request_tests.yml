@@ -5,6 +5,7 @@ on:
 
 env:
   DATABRICKS_HOST: ${{ secrets.DATABRICKS_HOST }}
+  DATABRICKS_TOKEN: ${{ secrets.DATABRICKS_TOKEN }}
 
 jobs:
   unit-test-notebook:
@@ -15,16 +16,26 @@ jobs:
       - name: Checkout repo
         uses: actions/checkout@v2
 
-      - name: Run test notebook (Serverless)
-        uses: databricks/run-notebook@main
-        with:
-          databricks-token: ${{ secrets.DATABRICKS_TOKEN }}
+      # Instala o Databricks CLI oficial
+      - name: Install Databricks CLI
+        run: |
+          curl -fsSL https://raw.githubusercontent.com/databricks/setup-cli/main/install.sh | sh
 
-          local-notebook-path: notebooks/run_unit_tests.py
-
-          # ✅ Serverless compute (obrigatório no seu workspace)
-          serverless: true
-
-          git-commit: ${{ github.event.pull_request.head.sha }}
-
-          run-name: 'EDA transforms helper module unit tests'
+      # Roda notebook via Jobs API usando Serverless
+      - name: Run test notebook (Serverless via Jobs API)
+        run: |
+          databricks jobs run-now \
+            --json '{
+              "run_name": "eda-transforms-unit-tests",
+              "tasks": [
+                {
+                  "task_key": "unit_tests",
+                  "notebook_task": {
+                    "notebook_path": "/Repos/SEU_ORG/SEU_REPO/notebooks/run_unit_tests"
+                  },
+                  "compute": {
+                    "compute_type": "SERVERLESS"
+                  }
+                }
+              ]
+            }'
