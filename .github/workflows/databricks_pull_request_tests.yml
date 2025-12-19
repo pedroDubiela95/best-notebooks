@@ -22,7 +22,12 @@ jobs:
 
           local-notebook-path: notebooks/run_unit_tests.py
 
-          existing-cluster-id: ${{ secrets.DATABRICKS_CLUSTER_ID }}
+          # 👇 Job cluster efêmero (SEM cluster ID)
+          new-cluster-json: >
+            {
+              "spark_version": "14.3.x-scala2.12",
+              "num_workers": 1
+            }
 
           git-commit: ${{ github.event.pull_request.head.sha }}
 
